@@ -1,2 +1,273 @@
 # DevopsBasics
 Assignment given by apiwiz for Devops Intern Role
+
+## 1. Linux:
+### Q1. Provide steps to create a directory inside a directory where the parent directory does not exist.
+we can use mkdir, but in case of parent directory non-existance it returns a error. 
+So we need to use "mkdir -p" with this command we can create the child directory insidea parent directory at ago.
+Example :- `mkdir -p parent_dir/child_dir`
+
+Note:
+flag `-p` also supresses errors, if the directory in the specified path exist, it won't create new directories. If doesn't exist it creates the directory, unlike mkdir raising errors.
+
+
+
+### Q2. How to install a package on a Linux server when there is no internet connection?
+With the help of USB or mass storage devices:-
+1.we need to download the required packages from a online server or system.
+  cmd : `sudo apt-get download package-name`
+2.transfer the downloaded packages to the USB. or can directly download the packages in the USB directory
+3. Transfer the packages to the offline server through USB by,
+4. Navigate to the package directory in USB on offline server and install the packages using 
+   cmd: `sudo dpkg -i package-name.deb`
+5. Update the Package manager database:
+  cmd : `sudo apt-get update`
+
+### Q3. How to access specific folders of Server A from Server B and Server C?
+Initially you need to set the permissions for the directory.
+use  cmd `chmod xyz <dir_name>` to set or change the permissions on server A.
+After setting the permissions for other's access you can use SSH.
+Using SSH one can remotely access the directories of the other servers
+You can either use use SSH username & password to connect to Server A or use SSH keys to connect Server A
+cmd: `ssh username@serverA_IP
+     cd <path OR directory>
+   username = serverA username
+   serverA_IP = IP of serverA`
+
+### Q4. How to check all the running processes from a server?
+Once can use cmd "ps" for the running processes. will display process of current shell with PID's.
+other commands :-
+`ps ux`
+returns list of processes running by the current user
+`ps aux`
+returns all the process throught the system
+`ps -e`
+displays the full format listing of system Processes
+
+Note:- we can also use the cmd "top" if allowed, otherwise system returns permission denied error. This cmd displays dynamic, real-time view of system processes and load, system resource usage.
+
+Q5. Provide the command to delete all the files older than X days inside a specific directory.
+To delete only files(not folders or directories) older than X days in a dir
+
+cmd : `find <directory_path> -type f -mtime +X -exec rm {} \;`
+Where:
+find cmd finds the files with given constraints
+`<directory_path>` it should be replaced by the specific directory path
+`-type f` defines that we are searching only for files not folders or directories
+`-mtime +X` defines the time constraint, X should be replaced by number of days older files you want to remove
+`-exec` cmd executes the "rm" cmd on the files in the placeholder of find "{}"
+`\;` defines that the ";" is treated as a regular character and not the as end of exec cmd.
+
+### Q6. Create a shell script to identify the process ID 
+ a. script should as a user input for process ID
+ b. If the process exists script should print the process ID and exit 
+ c. If the process doesn't exist script should print the process doesn't exist and asks for another input
+
+We can write the script in 2 ways using while loop or by creating a function
+
+While loop Script:
+
+while true; do
+
+  read -p "Enter PID" p_id
+  
+  if ps -p "$p_id" > /dev/null 2>&1; then
+  
+  echo "Process with ID $p_id exist"
+  
+  exit 0
+  
+else
+
+  echo "Process with ID $p_id does not exist. Re-enter the Process ID"
+  
+fi
+
+done`
+
+Function Script:
+\`check_pid() {
+
+  read -p "Enter a process ID: " p_id
+  
+  if ps -p "$p_id" > /dev/null 2>&1; then
+  
+  echo "Process with ID $p_id exists.
+    
+  else
+  
+  echo "Process with ID $p_id does not exist. Re-enter the Process ID"
+    
+  check_process
+    
+  fi
+  
+}`
+
+check_process "(calling the function)"
+
+## 2. Docker:
+### Q1. What is docker and why do we need it?
+ Docker is a platform providing environment to run application and its dependencies in an isolated environment called containers. Containers are lightweight, portable, and self-contained, making them ideal for developing, testing, and deploying applications. It can also be used to develop and test applications locally, without having to worry about configuring the underlying operating system. Docker can be used to create CI/CD pipelines for automating the build, test, and deployment of applications. This can help you to streamline your development workflow and release new features more quickly. Overall, Docker is a powerful tool that can help organizations to develop, test, deploy, and manage applications more efficiently and effectively. Reduces Deployment time, improved reliability and easy deployment.
+
+### Q2. Write a docker file for a sample Java/python application.
+`FROM python:3.9`
+
+`WORKDIR /app`
+
+`COPY . .`
+
+`RUN pip install -r requirements.txt`
+
+`CMD ["python", "main.py"]`
+
+
+### Q3. What is the docker lifecycle?
+Create: A container is created from an image.
+Run:    A container is started and begins executing its processes.
+Stop:   A container is stopped and its processes are terminated.
+Pause:  A container's processes are paused but the container remains in memory.
+Unpause:A container's paused processes are resumed.
+Restart:A container is restarted.
+Remove: A container is deleted.
+
+### Q4. What is the difference between an image and a container?
+Docker image is a read-only template that contains all of the information needed to run an application.
+Image is immutable, which means that it cannot be changed once it is created. Image isn't isolated like container.
+A Docker container is a running instance of an image. A container is isolated from other containers and from the underlying operating system. This isolation makes containers lightweight and efficient, and it also helps to improve security. Container is mutable. Containers are created from Docker images, initializes a new container based on the specified image.
+Containers can be started, stopped, paused, resumed, and restarted. They are dynamic and can adapt to changing resource requirements. Images can be stored on hub with version tags.
+
+### Q5. How to check docker container logs? Provide the command for the same
+cmd: docker ps 
+  lists all the containers running
+Cmd: `docker logs <container_name_or_id>`
+  Now you can replace the conatiner name or ID to get logs of specific container
+
+## 3. Kubernetes:
+### Q1. What are different types of services?
+ClusterIP:    ClusterIP services are only accessible from within the Kubernetes cluster. They are the default service type.
+NodePort:     NodePort services are accessible from outside the Kubernetes cluster via a static port on each node.
+LoadBalancer: LoadBalancer services are exposed to the outside world via a load balancer provided by the cloud provider.
+ExternalName: ExternalName services map a service to a DNS name.
+
+### 2. What is a pod?
+In Kubernetes, a pod is the smallest and simplest unit in the Kubernetes object model. It represents a single instance of a running process in a cluster and encapsulates one or more containers that share the same network namespace, storage, and specifications for how to run the containers. It is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers. Pods are designed to be lightweight and portable. They are ephemeral by nature, meaning that they can be created and destroyed quickly and easily. Pods are also self-sufficient, meaning that they have all of the resources they need to run, including storage, networking, and processing power.
+Pods are the basic building block of Kubernetes applications. They can be used to run a variety of workloads, including web servers, databases, and microservices. Pods can also be used to run complex applications that require multiple containers to work together.
+
+
+### 3. Create a pod with the above created custom image when a pod dies k8s should automatically restart
+
+apiVersion: apps/v1    -> which version of the Kubernetes API is being used to create this object
+
+kind: Deployment       -> what kind of object is being created
+
+metadata:              -> data that helps uniquely identify the object,
+
+  name: my-deployment       including a name string, UID, and optional namespace
+  
+spec:                  -> what state is being desired for the object
+
+  replicas: 1          -> Specifies the desired number of replicas (pods) to be maintained.
+  
+  selector:            -> Defines how the Deployment finds which pods to manage.
+  
+  matchLabels:       -> Specifies that the Deployment should manage pods with the label 
+    
+  app: my-app
+  
+  template:            -> Describes the pod template used by the Deployment.
+  
+  metadata:          
+  
+  labels:          -> Labels applied to the pods.
+  
+  app: my-app
+  
+  spec: 
+  
+   containers:      -> List of containers within the pod.
+   
+  - name: my-container
+  - 
+  - image: your-docker-username/your-image-name:tag
+
+## 4. CI/CD:
+### Q1. Set up a pipeline (Github actions/Gitlab runner/ Jenkins or any open source tool) to build, test, create a docker image, publish and deploy to k8s. Use the application present in this public repo https://github.com/apiwizlabs/wizdesk.
+
+Used Github actions to set up the CI/CD pipeline:
+Forked the provided github repo and built the CI/CD pipeline using Github actions and Docker Hub
+
+Links
+Forked repo(my git) : https://github.com/royg-9595/wizdesk
+Dockerfile : https://github.com/royg-9595/wizdesk/blob/main/Dockerfile
+docker image: https://github.com/royg-9595/wizdesk/blob/main/.github/workflows
+
+Q2. Automate to spin up a network and virtual machines. Install the Nginx package and start the service(any cloud)
+Automate to spin up a network and virtual machines:
+Script-
+
+#Specify the provider (e.g., AWS)
+provider "aws" {
+  region = "us-east-1"  # Change this to your desired region
+}
+
+#Define a virtual network
+
+resource "aws_vpc" "my_vpc" {
+
+  cidr_block = "10.0.0.0/16"
+  
+  enable_dns_support = true
+  
+  enable_dns_hostnames = true
+  
+}
+
+#Create a subnet within the virtual network
+
+resource "aws_subnet" "my_subnet" {
+
+  vpc_id                  = aws_vpc.my_vpc.id
+  
+  cidr_block              = "10.0.1.0/24"
+  
+  availability_zone       = "us-east-1a"
+  
+}
+
+#Launch a virtual machine
+
+resource "aws_instance" "my_instance" {
+
+  ami           = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
+  
+  instance_type = "t2.micro"
+  
+  subnet_id     = aws_subnet.my_subnet.id
+  
+  key_name      = "your-key-pair-name"    # Replace with your key pair name
+  
+}`
+
+
+Install the Nginx package and start the service
+Script:
+
+#Update the package repository and install Nginx
+
+sudo yum update -y
+
+sudo yum install nginx -y
+
+#Start the Nginx service
+
+sudo service nginx start`
+
+#Enable Nginx to start on boot
+
+sudo chkconfig nginx on`
+
+echo "Nginx installed and service started successfully."
+
+
+Run the script file with all privillages on a cloud through SSH
