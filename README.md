@@ -15,12 +15,19 @@ flag `-p` also supresses errors, if the directory in the specified path exist, i
 ### Q2. How to install a package on a Linux server when there is no internet connection?
 With the help of USB or mass storage devices:-
 1.we need to download the required packages from a online server or system.
+
   cmd : `sudo apt-get download package-name`
+  
 2.transfer the downloaded packages to the USB. or can directly download the packages in the USB directory
+
 3. Transfer the packages to the offline server through USB by,
-4. Navigate to the package directory in USB on offline server and install the packages using 
+   
+4. Navigate to the package directory in USB on offline server and install the packages using
+
    cmd: `sudo dpkg -i package-name.deb`
+
 5. Update the Package manager database:
+
   cmd : `sudo apt-get update`
 
 ### Q3. How to access specific folders of Server A from Server B and Server C?
@@ -198,11 +205,17 @@ Used Github actions to set up the CI/CD pipeline:
 Forked the provided github repo and built the CI/CD pipeline using Github actions and Docker Hub
 
 Links
+
 Forked repo(my git) : https://github.com/royg-9595/wizdesk
+
 Dockerfile : https://github.com/royg-9595/wizdesk/blob/main/Dockerfile
+
 docker image: https://github.com/royg-9595/wizdesk/blob/main/.github/workflows
 
-Q2. Automate to spin up a network and virtual machines. Install the Nginx package and start the service(any cloud)
+![](https://github.com/royg-9595/DevopsBasics/blob/main/Images/Screenshot%20(162).png)
+![](https://github.com/royg-9595/DevopsBasics/blob/main/Images/Screenshot%20(158).png)
+
+### Q2. Automate to spin up a network and virtual machines. Install the Nginx package and start the service(any cloud)
 Automate to spin up a network and virtual machines:
 Script-
 
